@@ -1,3 +1,4 @@
+const SPOTIFY_URL = "open.spotify.com/";
 const SPOTIFY_AD_TITLE = "Advertisement ·";
 
 const titleIsAd = (title) => {
@@ -14,15 +15,16 @@ const unmute = (tabId) => {
 };
 
 const checkForAd = (tabId, _changeInfo, tab) => {
-	console.log(tab);
-	if (titleIsAd(tab.title)) {
-		console.log("Ad detected");
-		if (!tab.mutedInfo.muted) {
-			mute(tabId);
-		}
-	} else {
-		if (tab.mutedInfo.muted) {
-			unmute(tabId);
+	if (tab.url.match(SPOTIFY_URL)) {
+		if (titleIsAd(tab.title)) {
+			console.log("Ad detected");
+			if (!tab.mutedInfo.muted) {
+				mute(tabId);
+			}
+		} else {
+			if (tab.mutedInfo.muted) {
+				unmute(tabId);
+			}
 		}
 	}
 };
