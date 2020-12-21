@@ -1,4 +1,4 @@
-# Blockify - A Spotify Ad Blocker Chrome extension
+# Blockify - A Spotify Ad Blocker for Chrome 
 
 Shuts up annoying Spotify ads for a less jarring listening experience. Plays soft filler music until ads are over.
 
