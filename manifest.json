@@ -6,5 +6,6 @@
 	"permissions": ["tabs"],
 	"background": {
 		"scripts": ["background.js"]
-	}
+	},
+	"web_accessible_resources": ["*.mp3"]
 }
