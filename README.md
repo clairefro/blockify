@@ -14,7 +14,8 @@ git clone git@github.com:clairefro/blockify.git
 https://github.com/clairefro/blockify.git
 ```
 
-2. In Chrome, go to url: chrome://extensions/
+2. In Chrome, go to url: chrome://extensions/ , click "Load unpacked" in upper left
+
 
 ## Inspiration
 
