@@ -8,6 +8,13 @@ I learned a lot from this repo: https://github.com/pinavetas/SpotifyMuteAds
 
 ### Filler music credits
 
-Found on [SoundClouds's freebamusic](https://soundcloud.com/freebmusic)
+Found on [Free Background Music](https://soundcloud.com/freebmusic) (SoundCloud)
 
-- [Onyx - Astral](https://www.youtube.com/watch?v=nzjMYkKuyWY)
+- [Onyx - Astral](https://soundcloud.com/freebmusic/onyx-astral-freebackgroundmusic)
+
+Found on [Free Music Archive](https://freemusicarchive.org/)
+
+- [Ketsa - Rock Hopping](https://freemusicarchive.org/music/Ketsa)
+- [Ketsa - Thinking Free](https://freemusicarchive.org/music/Ketsa)
+- [Ketsa - Here For Years](https://freemusicarchive.org/music/Ketsa)
+- [Ketsa - Cheeky](https://freemusicarchive.org/music/Ketsa)

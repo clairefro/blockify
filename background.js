@@ -1,7 +1,39 @@
 const SPOTIFY_URL = "open.spotify.com/";
 const SPOTIFY_AD_TITLE = "Advertisement ·";
 
-const fillerMusic1 = new Audio("music/Astral.mp3");
+const random = (arr) => {
+	return arr[Math.floor(Math.random() * arr.length)];
+};
+
+class MusicPlayer {
+	constructor() {
+		this.currentlyPlaying = null;
+	}
+
+	audioUrls = [
+		"music/Astral.mp3",
+		"music/ThinkingFree.mp3",
+		"music/RockHopping.mp3",
+		"music/Cheeky.mp3",
+		"music/HereForYears.mp3",
+	];
+
+	playRandom() {
+		const audio = new Audio(random(this.audioUrls));
+		audio.volume = 0.2;
+		this.currentlyPlaying = audio;
+		audio.play();
+	}
+
+	stop() {
+		if (this.currentlyPlaying) {
+			this.currentlyPlaying.pause();
+			this.currentlyPlaying = null;
+		}
+	}
+}
+
+const fillerMusic = new MusicPlayer();
 
 const titleIsAd = (title) => {
 	const adRegex = new RegExp(`^${SPOTIFY_AD_TITLE}`);
@@ -16,14 +48,10 @@ const unmute = (tabId) => {
 	chrome.tabs.update(tabId, { muted: false });
 };
 
-const stop = (audio) => {
-	audio.pause();
-	audio.currentTime = 0;
-};
-
+// create a blank tab for launching play of bg music without being muted
 const playFillerInNewTab = () => {
-	chrome.tabs.create({ url: "https://www.google.com/", selected: false }, function (tab) {
-		fillerMusic1.play();
+	chrome.tabs.create({ url: "", selected: false }, (tab) => {
+		fillerMusic.playRandom();
 		chrome.tabs.remove(tab.id);
 	});
 };
@@ -31,7 +59,6 @@ const playFillerInNewTab = () => {
 const checkForAd = (tabId, _changeInfo, tab) => {
 	if (tab.url.match(SPOTIFY_URL)) {
 		if (titleIsAd(tab.title)) {
-			console.log("Ad detected");
 			if (!tab.mutedInfo.muted) {
 				mute(tabId);
 				playFillerInNewTab();
@@ -40,7 +67,7 @@ const checkForAd = (tabId, _changeInfo, tab) => {
 			if (tab.mutedInfo.muted) {
 				unmute(tabId);
 			}
-			stop(fillerMusic1);
+			fillerMusic.stop();
 		}
 	}
 };
