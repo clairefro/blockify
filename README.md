@@ -25,9 +25,10 @@ git clone https://github.com/clairefro/blockify.git
 ![image](https://user-images.githubusercontent.com/9841162/102745384-b3340280-4310-11eb-82bf-e0f10520016c.png)
 
 ### How do I hush the filler music???
+
 Blockify plays random filler music while Spotify Ads play. 
 
-You can stop pthe background music at any time with the audio controller that appears in the upper right of Chrome.
+You can stop the background music at any time with the audio controller that appears in the upper right of Chrome.
 
 ![image](https://user-images.githubusercontent.com/9841162/102745490-f1312680-4310-11eb-8218-45c36c7d4c7b.png)
 
