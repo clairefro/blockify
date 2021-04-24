@@ -24,11 +24,14 @@ I learned a lot from this repo: https://github.com/pinavetas/SpotifyMuteAds
 
 Found on [Free Background Music](https://soundcloud.com/freebmusic) (SoundCloud)
 
-- [Onyx - Astral](https://soundcloud.com/freebmusic/onyx-astral-freebackgroundmusic)
-
 Found on [Free Music Archive](https://freemusicarchive.org/)
 
 - [Ketsa - Rock Hopping](https://freemusicarchive.org/music/Ketsa)
 - [Ketsa - Thinking Free](https://freemusicarchive.org/music/Ketsa)
 - [Ketsa - Here For Years](https://freemusicarchive.org/music/Ketsa)
 - [Ketsa - Cheeky](https://freemusicarchive.org/music/Ketsa)
+
+[its_chelsea](https://soundcloud.com/its_chelsea)
+
+- [Ejecta](https://soundcloud.com/its_chelsea/ejecta-v0/s-KFALsxWIDHn)
+- [Painting The Skies - RNX (Chelsea remix)](https://soundcloud.com/its_chelsea/painting-the-skies-rnx-chelsea-remix/s-VQ5J76UVStg)
