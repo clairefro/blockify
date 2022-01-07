@@ -1,5 +1,5 @@
 const SPOTIFY_URL = "open.spotify.com/";
-const SPOTIFY_AD_TITLE = "Advertisement ·";
+const SPOTIFY_AD_TITLE = "Spotify - Advertisement";
 
 const random = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
