@@ -4,7 +4,7 @@ Shuts up annoying Spotify ads for a less jarring listening experience. Plays sof
 
 ## Usage
 
-1. Clone this repo locally
+First, Clone this repo locally
 
 ```
 # ssh
@@ -14,15 +14,25 @@ git clone git@github.com:clairefro/blockify.git
 git clone https://github.com/clairefro/blockify.git
 ```
 
-2. In Chrome, go to url: `chrome://extensions/`
+### Add to Chrome
 
-3. Click **Load unpacked** in upper left and select the cloned folder
+1. In Chrome, go to url: `chrome://extensions/`
+
+2. Click **Load unpacked** in upper left and select the cloned folder
 
 ![image](https://user-images.githubusercontent.com/9841162/102745297-7f58dd00-4310-11eb-87cd-3d0eeca0ce03.png)
 
-4. Now you'll see Blockify. Make sure it is active. That's all! It will work automatically when you listen to music on [open.spotify.com](https://open.spotify.com/)
+3. Now you'll see Blockify. Make sure it is active. That's all! It will work automatically when you listen to music on [open.spotify.com](https://open.spotify.com/)
 
 ![image](https://user-images.githubusercontent.com/9841162/102745384-b3340280-4310-11eb-82bf-e0f10520016c.png)
+
+### Add to Firefox
+
+1. In Firefox, go to url: `about:debugging`
+2. On the left sidebar, click "This Firefox" to manage extensions
+3. "Load Temporary Add-on...", navigate to blockify folder on your computer
+
+NOTE: Extensions loaded this way are only installed temporarily. They will be removed once Firefox is closed. Sorry, working on distributing
 
 ### How do I hush the filler music???
 
@@ -31,6 +41,8 @@ Blockify plays random filler music while Spotify Ads play.
 You can stop the background music at any time with the audio controller that appears in the upper right of Chrome.
 
 ![image](https://user-images.githubusercontent.com/9841162/102745490-f1312680-4310-11eb-8218-45c36c7d4c7b.png)
+
+In Firefox... I dunno.
 
 ## Inspiration
 
