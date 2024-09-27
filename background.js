@@ -15,13 +15,13 @@ class MusicPlayer {
     "music/RockHopping.mp3",
     "music/Cheeky.mp3",
     "music/HereForYears.mp3",
-    "music/Ejecta.mp3",
-    "music/PaintingtheSkies-RNX(Chelsea Remix).mp3",
+    "music/lofi-study.mp3",
   ];
 
   playRandom() {
-    const audio = new Audio(random(this.audioUrls));
-    audio.volume = 0.2;
+    const audioPath = random(this.audioUrls);
+    const audio = new Audio(audioPath);
+    audio.volume = 0.8;
     this.currentlyPlaying = audio;
     audio.play();
   }
@@ -51,7 +51,7 @@ const unmute = (tabId) => {
 
 // create a blank tab for launching play of bg music without being muted
 const playFillerInNewTab = () => {
-  chrome.tabs.create({ url: "", selected: false }, (tab) => {
+  chrome.tabs.create({ url: "", active: false }, (tab) => {
     fillerMusic.playRandom();
     chrome.tabs.remove(tab.id);
   });
