@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Blockify",
-  "description": "Shuts up annoying Spotify ads and plays soft filler music instead, for a less jarring listening experience.",
+  "name": "Blockify - Block Spotify Ads",
+  "description": "Blocks annoying Spotify ads and plays soft filler music instead, for a less jarring listening experience.",
   "version": "1.0.0",
   "permissions": ["tabs"],
   "background": {
@@ -10,5 +10,7 @@
   "web_accessible_resources": ["*.mp3"],
   "icons": {
     "48": "icon.png"
-  }
+  },
+  "author": "Claire Froelich",
+  "homepage_url": "https://github.com/clairefro/blockify"
 }

@@ -50,8 +50,6 @@ I learned a lot from this repo: https://github.com/pinavetas/SpotifyMuteAds
 
 ## Filler music credits
 
-Found on [Free Background Music](https://soundcloud.com/freebmusic) (SoundCloud)
-
 Found on [Free Music Archive](https://freemusicarchive.org/)
 
 - [Ketsa - Rock Hopping](https://freemusicarchive.org/music/Ketsa)
