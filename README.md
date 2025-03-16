@@ -39,6 +39,7 @@ NOTE: Extensions loaded this way are only installed temporarily. They will be re
 Blockify plays random filler music while Spotify Ads play.
 
 You can stop the background music at any time with the audio controller popup from the plugin
+
 ![image](https://github.com/user-attachments/assets/55e5d652-3039-4102-9195-9b5ccc0e39e9)
 
 You can also use controls that appear in the upper right of Chrome.
