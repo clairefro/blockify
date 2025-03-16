@@ -243,28 +243,48 @@ const unmute = (tabId) => {
 };
 
 const checkForAd = async (tabId, _changeInfo, tab) => {
-  // only process if this is a Spotify tab with a valid URL and title
+  // Only process if this is a Spotify tab with a valid URL and title
   if (tab.url && tab.url.includes(SPOTIFY_URL) && tab.title) {
-    console.log(`Title changed: ${tab.title}, is ad: ${titleIsAd(tab.title)}`);
+    console.log(`Tab checked: "${tab.title}", is ad: ${titleIsAd(tab.title)}`);
 
     if (titleIsAd(tab.title)) {
       if (!tab.mutedInfo.muted) {
-        console.log("Ad detected, muting and playing filler music");
+        console.log("Ad detected, muting tab and playing filler music");
         mute(tabId);
         await fillerMusic.playRandom();
       }
     } else {
-      console.log("Not an ad, stopping filler music");
-      // Always stop music first
-      const stopped = await fillerMusic.stop();
-      console.log("Stop result:", stopped);
+      console.log("Regular content detected, ensuring filler music is stopped");
 
-      // Add a longer delay to ensure audio has completely stopped
-      await new Promise((resolve) => setTimeout(resolve, 800)); // Even longer delay
+      try {
+        // Force stop to ensure music stops regardless of internal state
+        await fillerMusic.stop(true);
+        console.log("Filler music stop requested");
 
-      if (tab.mutedInfo.muted) {
-        console.log("Unmuting tab");
-        unmute(tabId);
+        // Double-check if offscreen document still exists and force close if needed
+        const contexts = await chrome.runtime.getContexts({
+          contextTypes: ["OFFSCREEN_DOCUMENT"],
+        });
+
+        if (contexts.length > 0) {
+          console.warn(
+            "Offscreen document still exists after stop, forcing close"
+          );
+          await fillerMusic.forceCloseOffscreenDocument();
+        }
+
+        // Add a longer delay before unmuting
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error) {
+        console.error("Error stopping filler music:", error);
+        // Still attempt to force close the document
+        await fillerMusic.forceCloseOffscreenDocument();
+      } finally {
+        // Ensure we always unmute if needed, even if there were errors
+        if (tab.mutedInfo.muted) {
+          console.log("Unmuting tab");
+          unmute(tabId);
+        }
       }
     }
   }
