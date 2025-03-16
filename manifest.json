@@ -4,6 +4,10 @@
   "description": "Blocks annoying Spotify ads and plays soft filler music instead, for a less jarring listening experience.",
   "version": "2.0.0",
   "permissions": ["tabs", "offscreen"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
   "background": {
     "service_worker": "background.js"
   },

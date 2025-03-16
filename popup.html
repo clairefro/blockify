@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blockify Controls</title>
+    <style>
+      body {
+        width: 200px;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #1db954; /* Spotify green */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      button:hover {
+        background-color: #1ed760;
+      }
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      .status {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #666;
+      }
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .active {
+        background-color: #1db954;
+      }
+      .inactive {
+        background-color: #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Blockify Controls</h2>
+    <div class="status-indicator">
+      <div id="statusDot" class="status-dot inactive"></div>
+      <span id="statusLabel">Not playing filler music</span>
+    </div>
+    <button id="stopMusic">Stop Filler Music</button>
+    <div class="status" id="status">Ready</div>
+    <script src="popup.js"></script>
+  </body>
+</html>
