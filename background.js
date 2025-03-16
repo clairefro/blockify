@@ -60,6 +60,7 @@ class MusicPlayer {
   async stop() {
     if (this.currentlyPlaying) {
       try {
+        await this.ensureOffscreenDocumentCreated();
         await chrome.runtime.sendMessage({
           action: "stop",
         });
@@ -86,7 +87,7 @@ const unmute = (tabId) => {
   chrome.tabs.update(tabId, { muted: false });
 };
 
-const checkForAd = (tabId, _changeInfo, tab) => {
+const checkForAd = async (tabId, _changeInfo, tab) => {
   if (tab.url && tab.url.includes(SPOTIFY_URL)) {
     if (titleIsAd(tab.title)) {
       if (!tab.mutedInfo.muted) {
@@ -94,6 +95,7 @@ const checkForAd = (tabId, _changeInfo, tab) => {
         fillerMusic.playRandom();
       }
     } else {
+      await fillerMusic.stop();
       if (tab.mutedInfo.muted) {
         unmute(tabId);
       }
