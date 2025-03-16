@@ -1,5 +1,23 @@
 let audio = null;
 
+// Preload audio files
+const audioFiles = [
+  "music/ThinkingFree.mp3",
+  "music/RockHopping.mp3",
+  "music/Cheeky.mp3",
+  "music/HereForYears.mp3",
+  "music/lofi-study.mp3",
+];
+
+// Create audio elements to preload files (but don't play them)
+const preloadedAudio = audioFiles.map((file) => {
+  const audio = new Audio(chrome.runtime.getURL(file));
+  audio.preload = "auto";
+  return audio;
+});
+
+console.log("Audio files preloaded");
+
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.action === "play") {
     stopAudio();

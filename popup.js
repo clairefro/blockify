@@ -18,10 +18,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Always enable the stop button, even if we're not sure music is playing
+  function enableStopButton() {
+    stopButton.textContent = "Stop Filler Music (Force)";
+    stopButton.disabled = false;
+  }
+
   // Check current music status when popup opens
   chrome.runtime.sendMessage({ action: "getStatus" }, function (response) {
     console.log("Status response:", response);
-    updateButtonState(response && response.isPlaying);
+    if (response) {
+      updateButtonState(response.isPlaying);
+
+      // Even if not reported as playing, enable the stop button if we have an offscreen document
+      if (response.hasOffscreen) {
+        enableStopButton();
+      }
+    }
   });
 
   stopButton.addEventListener("click", function () {

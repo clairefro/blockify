@@ -5,6 +5,17 @@ const random = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
+chrome.runtime.onStartup.addListener(() => {
+  console.log("Extension starting up, preloading offscreen document");
+  fillerMusic.ensureOffscreenDocumentCreated();
+});
+
+// Also preload when extension is installed or updated
+chrome.runtime.onInstalled.addListener(() => {
+  console.log("Extension installed/updated, preloading offscreen document");
+  fillerMusic.ensureOffscreenDocumentCreated();
+});
+
 class MusicPlayer {
   constructor() {
     this.currentlyPlaying = false;
@@ -35,7 +46,7 @@ class MusicPlayer {
           justification: "Playing filler music in place of jarring noise",
         });
 
-        // Wait for document to be ready with improved logic
+        // Wait for document to be ready with shorter timeout
         this.offscreenReady = false;
         await new Promise((resolve) => {
           const timeout = setTimeout(() => {
@@ -44,7 +55,7 @@ class MusicPlayer {
             );
             this.offscreenReady = true;
             resolve();
-          }, 5000); // Longer timeout
+          }, 2000); // Reduced timeout to 2 seconds
 
           const messageListener = (message) => {
             if (message.action === "offscreenReady") {
@@ -73,12 +84,18 @@ class MusicPlayer {
       return false;
     }
   }
-
   async playRandom() {
     try {
-      await this.ensureOffscreenDocumentCreated();
+      // Try to ensure document is created but don't wait too long
+      const documentPromise = this.ensureOffscreenDocumentCreated();
 
-      // Even if not ready, try to play audio anyway
+      // Only wait up to 1 second for document creation
+      const timeoutPromise = new Promise((resolve) =>
+        setTimeout(resolve, 1000)
+      );
+      await Promise.race([documentPromise, timeoutPromise]);
+
+      // Proceed with playback regardless
       const audioPath = chrome.runtime.getURL(random(this.audioUrls));
       console.log("Playing random audio:", audioPath);
 
@@ -91,19 +108,35 @@ class MusicPlayer {
       return true;
     } catch (e) {
       console.error("Error playing audio:", e);
-      // Still mark as playing since audio might be playing
       this.currentlyPlaying = true;
       return false;
     }
   }
 
-  async stop() {
-    if (this.currentlyPlaying) {
+  async stop(force = false) {
+    console.log(
+      "Stop requested, currently playing:",
+      this.currentlyPlaying,
+      "force:",
+      force
+    );
+
+    // Always attempt to stop if force=true, regardless of currentlyPlaying flag
+    if (this.currentlyPlaying || force) {
       console.log("Stopping filler music...");
       try {
-        // Try to send stop message first
+        // Try to send stop message first to any existing offscreen document
         try {
-          await chrome.runtime.sendMessage({ action: "stop" });
+          const existingContexts = await chrome.runtime.getContexts({
+            contextTypes: ["OFFSCREEN_DOCUMENT"],
+          });
+
+          if (existingContexts.length > 0) {
+            await chrome.runtime.sendMessage({ action: "stop" });
+            console.log("Stop message sent to offscreen document");
+          } else {
+            console.log("No offscreen document exists, skipping stop message");
+          }
         } catch (e) {
           console.warn("Could not send stop message, will force close:", e);
         }
@@ -115,7 +148,7 @@ class MusicPlayer {
         return true;
       } catch (e) {
         console.error("Error stopping music:", e);
-        this.currentlyPlaying = false;
+        this.currentlyPlaying = false; // Reset state anyway
         return false;
       }
     }
@@ -145,7 +178,7 @@ class MusicPlayer {
 
 const fillerMusic = new MusicPlayer();
 
-// SINGLE unified message listener
+// Unified message handler
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Background received message:", message);
 
@@ -156,13 +189,33 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.action === "getStatus") {
-    sendResponse({ isPlaying: fillerMusic.currentlyPlaying });
-    return false;
+    // Check existing offscreen contexts to verify if music is actually playing
+    chrome.runtime
+      .getContexts({
+        contextTypes: ["OFFSCREEN_DOCUMENT"],
+      })
+      .then((contexts) => {
+        const hasOffscreen = contexts.length > 0;
+        // Only report as playing if we both believe it's playing AND have an offscreen document
+        const isActuallyPlaying = fillerMusic.currentlyPlaying && hasOffscreen;
+        sendResponse({
+          isPlaying: isActuallyPlaying,
+          hasOffscreen: hasOffscreen,
+        });
+      })
+      .catch((err) => {
+        console.error("Error checking contexts:", err);
+        // Fall back to the stored state
+        sendResponse({ isPlaying: fillerMusic.currentlyPlaying });
+      });
+    return true; // Keep channel open for async response
   }
 
   if (message.action === "manualStop") {
+    console.log("Manual stop requested");
+    // Force stop, regardless of current state
     fillerMusic
-      .stop()
+      .stop(true)
       .then(() => {
         sendResponse({ success: true });
       })
@@ -207,7 +260,7 @@ const checkForAd = async (tabId, _changeInfo, tab) => {
       console.log("Stop result:", stopped);
 
       // Add a longer delay to ensure audio has completely stopped
-      await new Promise((resolve) => setTimeout(resolve, 500)); // Increased delay
+      await new Promise((resolve) => setTimeout(resolve, 800)); // Even longer delay
 
       if (tab.mutedInfo.muted) {
         console.log("Unmuting tab");
