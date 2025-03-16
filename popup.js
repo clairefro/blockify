@@ -4,9 +4,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const statusDot = document.getElementById("statusDot");
   const statusLabel = document.getElementById("statusLabel");
 
+  const STOP_FILLER_MUSIC_TEXT = "Stop Filler Music";
+
   function updateButtonState(isPlaying) {
     if (isPlaying) {
-      stopButton.textContent = "Stop Filler Music";
+      stopButton.textContent = STOP_FILLER_MUSIC_TEXT;
       stopButton.disabled = false;
       statusDot.className = "status-dot active";
       statusLabel.textContent = "Playing filler music";
@@ -20,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Always enable the stop button, even if we're not sure music is playing
   function enableStopButton() {
-    stopButton.textContent = "Stop Filler Music (Force)";
+    stopButton.textContent = STOP_FILLER_MUSIC_TEXT;
     stopButton.disabled = false;
   }
 
