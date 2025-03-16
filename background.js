@@ -5,9 +5,11 @@ const random = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
+let offscreenDocumentReady = false;
+
 class MusicPlayer {
   constructor() {
-    this.currentlyPlaying = null;
+    this.currentlyPlaying = false;
   }
 
   audioUrls = [
@@ -18,18 +20,53 @@ class MusicPlayer {
     "music/lofi-study.mp3",
   ];
 
-  playRandom() {
-    const audioPath = random(this.audioUrls);
-    const audio = new Audio(audioPath);
-    audio.volume = 0.8;
-    this.currentlyPlaying = audio;
-    audio.play();
+  async ensureOffscreenDocumentCreated() {
+    if (offscreenDocumentReady) return;
+
+    // check if offscreen document exists
+    try {
+      const existingContexts = await chrome.runtime.getContexts({
+        contextTypes: ["OFFSCREEN_DOCUMENT"],
+      });
+
+      if (existingContexts.length === 0) {
+        // create an offscreen document if it doesn't exist
+        await chrome.offscreen.createDocument({
+          url: "offscreen.html",
+          reasons: ["AUDIO_PLAYBACK"],
+          justification: "Playing filler music in place of jarring noise",
+        });
+      }
+    } catch (e) {
+      console.error("Error creating offscreen document:", e);
+    }
   }
 
-  stop() {
+  async playRandom() {
+    await this.ensureOffscreenDocumentCreated();
+    const audioPath = chrome.runtime.getURL(random(this.audioUrls));
+
+    try {
+      await chrome.runtime.sendMessage({
+        action: "play",
+        audioPath,
+      });
+      this.currentlyPlaying = true;
+    } catch (e) {
+      console.error("Error playing audio:", e);
+    }
+  }
+
+  async stop() {
     if (this.currentlyPlaying) {
-      this.currentlyPlaying.pause();
-      this.currentlyPlaying = null;
+      try {
+        await chrome.runtime.sendMessage({
+          action: "stop",
+        });
+        this.currentlyPlaying = false;
+      } catch (e) {
+        console.error("Error stopping audio:", e);
+      }
     }
   }
 }
@@ -49,20 +86,12 @@ const unmute = (tabId) => {
   chrome.tabs.update(tabId, { muted: false });
 };
 
-// create a blank tab for launching play of bg music without being muted
-const playFillerInNewTab = () => {
-  chrome.tabs.create({ url: "", active: false }, (tab) => {
-    fillerMusic.playRandom();
-    chrome.tabs.remove(tab.id);
-  });
-};
-
 const checkForAd = (tabId, _changeInfo, tab) => {
-  if (tab.url.match(SPOTIFY_URL)) {
+  if (tab.url && tab.url.includes(SPOTIFY_URL)) {
     if (titleIsAd(tab.title)) {
       if (!tab.mutedInfo.muted) {
         mute(tabId);
-        playFillerInNewTab();
+        fillerMusic.playRandom();
       }
     } else {
       if (tab.mutedInfo.muted) {
@@ -73,8 +102,11 @@ const checkForAd = (tabId, _changeInfo, tab) => {
   }
 };
 
-const run = () => {
-  chrome.tabs.onUpdated.addListener(checkForAd);
-};
+// listen for messages from the offscreen document
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "offscreenReady") {
+    offscreenDocumentReady = true;
+  }
+});
 
-run();
+chrome.tabs.onUpdated.addListener(checkForAd);
