@@ -1,5 +1,5 @@
 const SPOTIFY_URL = "open.spotify.com/";
-const SPOTIFY_AD_TITLE = "Spotify – Advertisement";
+const SPOTIFY_AD_TITLE_START = "Spotify –";
 
 const random = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -37,7 +37,7 @@ class MusicPlayer {
 const fillerMusic = new MusicPlayer();
 
 const titleIsAd = (title) => {
-  const adRegex = new RegExp(`^${SPOTIFY_AD_TITLE}`);
+  const adRegex = new RegExp(`^${SPOTIFY_AD_TITLE_START}`);
   return !!title.match(adRegex);
 };
 
