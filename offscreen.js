@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
 function playAudio(audioPath) {
   audio = new Audio(audioPath);
-  audio.volume = 0.3;
+  audio.volume = 0.6;
   audio.play();
 }
 
